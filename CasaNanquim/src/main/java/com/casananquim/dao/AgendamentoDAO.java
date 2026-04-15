@@ -71,7 +71,6 @@ public class AgendamentoDAO {
             while (rs.next()) {
                 horarios.add(rs.getString("horario_format"));
             }
-            
         } catch (SQLException e) {
             e.printStackTrace();
         }

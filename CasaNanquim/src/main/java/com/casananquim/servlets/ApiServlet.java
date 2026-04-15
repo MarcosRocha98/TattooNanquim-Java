@@ -11,7 +11,6 @@ import com.casananquim.models.PrecoEspaco;
 import com.casananquim.models.ReservaEspaco;
 import com.casananquim.models.TatuadorExterno;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,7 +18,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,8 +122,15 @@ public class ApiServlet extends HttpServlet {
         
         try {
             BufferedReader reader = req.getReader();
-            Type type = new TypeToken<HashMap<String, Object>>(){}.getType();
-            HashMap<String, Object> dados = gson.fromJson(reader, type);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            String json = sb.toString();
+            
+            @SuppressWarnings("unchecked")
+            HashMap<String, Object> dados = gson.fromJson(json, HashMap.class);
             HashMap<String, Object> response = new HashMap<>();
             
             if ("/agendar".equals(path)) {
@@ -167,7 +172,6 @@ public class ApiServlet extends HttpServlet {
                 double valor = ((Number) dados.get("valor")).doubleValue();
                 String observacao = (String) dados.get("observacao");
                 
-                // Verificar se tatuador já existe
                 TatuadorExterno existente = tatuadorExternoDAO.buscarPorWhatsapp(whatsapp);
                 int tatuadorId;
                 if (existente == null) {
@@ -185,6 +189,10 @@ public class ApiServlet extends HttpServlet {
                 ReservaEspaco reserva = new ReservaEspaco();
                 reserva.setTatuadorId(tatuadorId);
                 reserva.setTatuadorNome(nome);
+                reserva.setTatuadorWhatsapp(whatsapp);
+                reserva.setEmail(email);
+                reserva.setInstagram(instagram);
+                reserva.setEspecialidade(especialidade);
                 reserva.setDataReserva(dataReserva);
                 reserva.setHorarioInicio(horarioInicio);
                 reserva.setHorarioFim(horarioFim);
@@ -228,8 +236,15 @@ public class ApiServlet extends HttpServlet {
         
         try {
             BufferedReader reader = req.getReader();
-            Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-            HashMap<String, String> dados = gson.fromJson(reader, type);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            String json = sb.toString();
+            
+            @SuppressWarnings("unchecked")
+            HashMap<String, String> dados = gson.fromJson(json, HashMap.class);
             
             if (path != null && path.contains("/status/")) {
                 String[] partes = path.split("/");
