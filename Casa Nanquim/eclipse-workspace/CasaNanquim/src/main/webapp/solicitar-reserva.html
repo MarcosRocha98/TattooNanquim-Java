@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar Reserva | Casa Nanquim</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .navbar {
+            background: #000;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo span {
+            color: #ff8800;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-name {
+            color: #ff8800;
+            font-weight: 500;
+        }
+
+        .btn-sair {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: #111;
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid #222;
+        }
+
+        .card h2 {
+            margin-bottom: 30px;
+            border-left: 4px solid #ff8800;
+            padding-left: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ff8800;
+        }
+
+        .precos {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .preco-card {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 12px;
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .preco-card.selected {
+            border-color: #ff8800;
+            background: #222;
+        }
+
+        .preco-card h3 {
+            color: #ff8800;
+        }
+
+        .preco-card p {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: #ff8800;
+            color: black;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background: #ffaa33;
+        }
+
+        .btn-voltar {
+            background: transparent;
+            border: 1px solid #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #0f3b1f;
+            border: 1px solid #00c851;
+            color: #a5f0c0;
+        }
+
+        .alert-error {
+            background: #3b1f1f;
+            border: 1px solid #ff4444;
+            color: #ff8888;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">⚡ CASA <span>NANQUIM</span></a>
+        <div class="user-info">
+            <span class="user-name" id="userName"></span>
+            <button class="btn-sair" onclick="logout()">Sair</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>📅 Solicitar Reserva de Espaço</h2>
+            
+            <div id="alertMessage"></div>
+            
+            <div class="form-group">
+                <label>📅 Data da reserva</label>
+                <input type="date" id="dataReserva" min="">
+            </div>
+            
+            <div class="form-group">
+                <label>⏰ Horário de início</label>
+                <select id="horarioInicio">
+                    <option value="">Selecione...</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>⏰ Horário de fim</label>
+                <select id="horarioFim" disabled>
+                    <option value="">Será preenchido automaticamente</option>
+                </select>
+                <p class="info-text" id="infoHorarioFim"></p>
+            </div>
+            
+            <h3>💰 Escolha o período</h3>
+            <div class="precos" id="precosContainer"></div>
+            
+            <div class="form-group">
+                <label>💬 Observações (opcional)</label>
+                <textarea id="observacao" rows="3" placeholder="Alguma informação adicional?"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>💰 Valor total</label>
+                <input type="text" id="valorTotal" readonly style="background:#333; font-size:1.2rem; font-weight:bold;">
+            </div>
+            
+            <button class="btn-submit" id="btnReservar">📝 Solicitar Reserva</button>
+            <button class="btn-voltar" onclick="window.location.href='dashboard-tatuador.html'">← Voltar ao Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8888/CasaNanquim/api';
+        let precos = [];
+        let selectedPreco = null;
+        let horariosDisponiveis = [];
+
+        function verificarLogin() {
+            const tatuadorId = localStorage.getItem('tatuadorId');
+            const tatuadorNome = localStorage.getItem('tatuadorNome');
+            
+            if (!tatuadorId) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            document.getElementById('userName').innerHTML = `<i class="fas fa-user"></i> ${tatuadorNome}`;
+            return true;
+        }
+
+        function configurarDataMinima() {
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            document.getElementById('dataReserva').min = `${ano}-${mes}-${dia}`;
+        }
+
+        async function carregarPrecos() {
+            try {
+                const response = await fetch(`${API_URL}/precos-espaco`);
+                precos = await response.json();
+                const container = document.getElementById('precosContainer');
+                container.innerHTML = precos.map(p => `
+                    <div class="preco-card" data-id="${p.id}" data-valor="${p.valor}" data-periodo="${p.periodo}">
+                        <h3>${p.descricao || p.periodo}</h3>
+                        <p>R$ ${p.valor.toFixed(2)}</p>
+                    </div>
+                `).join('');
+                
+                document.querySelectorAll('.preco-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        document.querySelectorAll('.preco-card').forEach(c => c.classList.remove('selected'));
+                        card.classList.add('selected');
+                        selectedPreco = {
+                            id: parseInt(card.dataset.id),
+                            valor: parseFloat(card.dataset.valor),
+                            periodo: card.dataset.periodo
+                        };
+                        calcularValor();
+                        calcularHorarioFimAutomatico();
+                    });
+                });
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        function calcularValor() {
+            if (selectedPreco) {
+                document.getElementById('valorTotal').value = `R$ ${selectedPreco.valor.toFixed(2)}`;
+            }
+        }
+
+        async function carregarHorariosDisponiveis() {
+            const data = document.getElementById('dataReserva').value;
+            if (!data) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/horarios-disponiveis-espaco?data=${data}`);
+                const ocupados = await response.json();
+                const todosHorarios = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+                horariosDisponiveis = todosHorarios.filter(h => !ocupados.includes(h));
+                
+                const selectInicio = document.getElementById('horarioInicio');
+                if (horariosDisponiveis.length > 0) {
+                    selectInicio.innerHTML = '<option value="">Selecione...</option>' + 
+                        horariosDisponiveis.map(h => `<option value="${h}">${h}</option>`).join('');
+                } else {
+                    selectInicio.innerHTML = '<option value="">Sem horários disponíveis nesta data</option>';
+                }
+                
+                document.getElementById('horarioFim').innerHTML = '<option value="">Será preenchido automaticamente</option>';
+                document.getElementById('horarioFim').disabled = true;
+                
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        function calcularHorarioFimAutomatico() {
+            const inicio = document.getElementById('horarioInicio').value;
+            if (!inicio || !selectedPreco) return;
+            
+            let duracao = 0;
+            if (selectedPreco.periodo === '2_HORAS') duracao = 2;
+            else if (selectedPreco.periodo === 'MEIO_PERIODO') duracao = 4;
+            else if (selectedPreco.periodo === 'DIA_INTEIRO') duracao = 8;
+            else return;
+            
+            const [horaInicio, minutoInicio] = inicio.split(':').map(Number);
+            let horaFim = horaInicio + duracao;
+            
+            if (horaFim > 20) {
+                alert('Este horário ultrapassa o limite de funcionamento (20:00). Escolha um horário mais cedo.');
+                document.getElementById('horarioInicio').value = '';
+                return;
+            }
+            
+            const horarioFimStr = `${String(horaFim).padStart(2, '0')}:${String(minutoInicio).padStart(2, '0')}`;
+            
+            if (!horariosDisponiveis.includes(horarioFimStr)) {
+                alert(`O horário de fim (${horarioFimStr}) não está disponível. Escolha outro horário de início.`);
+                document.getElementById('horarioInicio').value = '';
+                return;
+            }
+            
+            const selectFim = document.getElementById('horarioFim');
+            selectFim.innerHTML = `<option value="${horarioFimStr}">${horarioFimStr}</option>`;
+            selectFim.disabled = false;
+            selectFim.value = horarioFimStr;
+            document.getElementById('infoHorarioFim').innerHTML = `Horário de fim calculado automaticamente (+${duracao}h)`;
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => alertDiv.innerHTML = '', 5000);
+        }
+
+        document.getElementById('dataReserva').addEventListener('change', carregarHorariosDisponiveis);
+        document.getElementById('horarioInicio').addEventListener('change', calcularHorarioFimAutomatico);
+
+        document.getElementById('btnReservar').addEventListener('click', async () => {
+            const dataReserva = document.getElementById('dataReserva').value;
+            const horarioInicio = document.getElementById('horarioInicio').value;
+            const horarioFim = document.getElementById('horarioFim').value;
+            const observacao = document.getElementById('observacao').value;
+            
+            if (!dataReserva || !horarioInicio || !horarioFim || !selectedPreco) {
+                showAlert('Preencha todos os campos obrigatórios!', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/solicitar-reserva`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        dataSolicitacao: dataReserva,
+                        horarioInicio: horarioInicio,
+                        horarioFim: horarioFim,
+                        periodoEscolhido: selectedPreco.periodo,
+                        valor: selectedPreco.valor,
+                        observacao: observacao
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('✅ Solicitação enviada com sucesso! Aguarde a confirmação.', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard-tatuador.html';
+                    }, 2000);
+                } else {
+                    showAlert('❌ ' + (result.error || 'Erro ao solicitar reserva'), 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Erro ao conectar com o servidor', 'error');
+                console.error('Erro:', error);
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('tatuadorId');
+            localStorage.removeItem('tatuadorNome');
+            window.location.href = 'index.html';
+        }
+
+        if (verificarLogin()) {
+            configurarDataMinima();
+            carregarPrecos();
+        }
+    </script>
+</body>
+</html>

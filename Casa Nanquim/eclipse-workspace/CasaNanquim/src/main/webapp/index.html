@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Casa Nanquim | Estúdio de Tatuagem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Botão Flutuante do Instagram */
+        .float-instagram {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #f09433, #d62976, #962fbf);
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .float-instagram:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 999;
+            border-bottom: 1px solid #222;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            z-index: 1001;
+        }
+
+        .logo span {
+            color: #ff8800;
+        }
+
+        /* Menu Desktop */
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        /* Menu Mobile - Lado Direito */
+        .menu-toggle {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: white;
+            z-index: 1001;
+        }
+
+        /* Hero com imagem de fundo */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.pexels.com/photos/1683202/pexels-photo-1683202.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 span {
+            color: #ff8800;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 2rem;
+        }
+
+        .hero-tagline {
+            font-size: 1rem;
+            color: #ff8800;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #ff8800;
+            color: black;
+            padding: 12px 32px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: transform 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background: #ffaa33;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #ff8800;
+            color: #ff8800;
+        }
+
+        .btn-outline:hover {
+            background: #ff8800;
+            color: black;
+        }
+
+        section {
+            padding: 80px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            border-left: 4px solid #ff8800;
+            padding-left: 20px;
+        }
+
+        .sobre-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .sobre-text p {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .sobre-text h3 {
+            color: #ff8800;
+            margin-bottom: 15px;
+        }
+
+        .sobre-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stat {
+            text-align: center;
+            background: #111;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #222;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ff8800;
+        }
+
+        .alugar-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .plano-card {
+            background: #111;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid #222;
+            transition: transform 0.3s;
+        }
+
+        .plano-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff8800;
+        }
+
+        .plano-card i {
+            font-size: 3rem;
+            color: #ff8800;
+            margin-bottom: 15px;
+        }
+
+        .plano-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .plano-card .preco {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ff8800;
+            margin: 15px 0;
+        }
+
+        .plano-card p {
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .localizacao-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .info-local i {
+            color: #ff8800;
+            margin-right: 10px;
+            width: 25px;
+        }
+
+        .info-local p {
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
+        .info-local strong {
+            color: white;
+        }
+
+        .mapa {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        .mapa iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+
+        .instagram-dm {
+            background: linear-gradient(45deg, #f09433, #d62976, #962fbf);
+            padding: 12px 24px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .instagram-dm a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer {
+            background: #000;
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid #222;
+        }
+
+        .footer p {
+            color: #888;
+        }
+
+        .footer a {
+            color: #ff8800;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 3rem; }
+            h2 { font-size: 2rem; }
+            .sobre-stats { gap: 15px; }
+        }
+
+        @media (max-width: 768px) {
+            /* Menu Hamburguer - Lado Direito */
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                max-width: 280px;
+                height: 100vh;
+                background: #000;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                transition: right 0.3s ease;
+                z-index: 1000;
+                margin: 0;
+                padding: 0;
+                box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links li {
+                margin: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.2rem;
+            }
+
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .hero-tagline { font-size: 0.8rem; }
+            
+            .btn, .btn-outline { 
+                padding: 10px 20px; 
+                font-size: 0.9rem;
+                margin: 5px;
+            }
+            
+            .sobre-content { 
+                grid-template-columns: 1fr; 
+                gap: 30px;
+            }
+            
+            .alugar-grid { 
+                grid-template-columns: 1fr; 
+                gap: 20px;
+            }
+            
+            .localizacao-content { 
+                grid-template-columns: 1fr; 
+                gap: 30px;
+            }
+            
+            .sobre-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            section {
+                padding: 50px 0;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+                margin-bottom: 2rem;
+            }
+            
+            .float-instagram {
+                width: 45px;
+                height: 45px;
+                font-size: 22px;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .stat {
+                padding: 15px;
+            }
+            
+            .plano-card {
+                padding: 20px;
+                max-width: 300px;
+                margin: 0 auto;
+                width: 100%;
+            }
+            
+            .plano-card i {
+                font-size: 2rem;
+            }
+            
+            .plano-card h3 {
+                font-size: 1.2rem;
+            }
+            
+            .plano-card .preco {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.8rem; }
+            .hero p { font-size: 0.9rem; }
+            .btn, .btn-outline { padding: 8px 16px; font-size: 0.8rem; }
+            h2 { font-size: 1.5rem; }
+            .sobre-stats { grid-template-columns: 1fr; gap: 10px; }
+            .stat-number { font-size: 1.2rem; }
+            .container { padding: 0 15px; }
+            section { padding: 40px 0; }
+            .info-local p { font-size: 0.85rem; }
+            .mapa iframe { height: 200px; }
+            .instagram-dm { padding: 8px 16px; font-size: 0.8rem; }
+            .instagram-dm a { font-size: 0.8rem; }
+            .footer p { font-size: 0.7rem; }
+            .nav-links { width: 85%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botão Flutuante do Instagram -->
+    <a href="https://www.instagram.com/casananquim/" target="_blank" class="float-instagram">
+        <i class="fab fa-instagram"></i>
+    </a>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">⚡ CASA <span>NANQUIM</span></a>
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#inicio" onclick="fecharMenu()">Início</a></li>
+                <li><a href="#sobre" onclick="fecharMenu()">Sobre</a></li>
+                <li><a href="#alugar" onclick="fecharMenu()">Alugar Espaço</a></li>
+                <li><a href="#localizacao" onclick="fecharMenu()">Localização</a></li>
+                <li><a href="login-tatuador.html" style="color:#ff8800;" onclick="fecharMenu()">🎨 Área do Tatuador</a></li>
+                <li><a href="login-admin.html" style="color:#ff8800;" onclick="fecharMenu()">🔑 Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero / Início -->
+    <section id="inicio" class="hero">
+        <div>
+            <div class="hero-tagline">✦ 6 tatuadoras, 6 estilos únicos ✦</div>
+            <h1>CASA <span>NANQUIM</span></h1>
+            <p>tatuagens com identidade ⟡ do delicado ao autoral</p>
+            <a href="login-tatuador.html" class="btn">Área do Tatuador</a>
+            <a href="login-admin.html" class="btn btn-outline" style="margin-left: 15px;">Admin</a>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Sobre a Casa Nanquim -->
+        <section id="sobre">
+            <h2>Sobre a Casa Nanquim</h2>
+            <div class="sobre-content">
+                <div class="sobre-text">
+                    <p>A Casa Nanquim é um estúdio de tatuagem feminino, moderno e acolhedor, localizado em Vila Matilde. Reunimos 6 tatuadoras com estilos únicos para atender desde o traço mais delicado até o autoral mais marcante.</p>
+                    <p>Nosso estúdio conta com ambiente climatizado, equipamentos de última geração, materiais descartáveis de alta qualidade e toda estrutura para sua segurança e conforto.</p>
+                    <h3>🎯 Nossa Missão</h3>
+                    <p>Valorizar a arte da tatuagem com excelência, segurança e criatividade, proporcionando um espaço acolhedor para tatuadoras e clientes.</p>
+                    
+                    <div style="margin-top: 30px;">
+                        <div class="instagram-dm">
+                            <a href="https://www.instagram.com/casananquim/" target="_blank">
+                                <i class="fab fa-instagram"></i> Agendamentos via DM @casananquim
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sobre-stats">
+                    <div class="stat">
+                        <div class="stat-number">6</div>
+                        <div>Tatuadoras</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">6</div>
+                        <div>Estilos Únicos</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">+500</div>
+                        <div>Tatuagens realizadas</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">2019</div>
+                        <div>Ano de fundação</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alugar Espaço -->
+        <section id="alugar">
+            <h2>Alugue Nosso Espaço</h2>
+            <div class="alugar-grid">
+                <div class="plano-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>2 Horas</h3>
+                    <div class="preco">R$ 80</div>
+                    <p>Ideal para sessões rápidas</p>
+                    <a href="login-tatuador.html" class="btn-outline" style="padding: 8px 20px; text-decoration:none; display:inline-block;">Reservar</a>
+                </div>
+                <div class="plano-card">
+                    <i class="fas fa-sun"></i>
+                    <h3>Meio Período</h3>
+                    <div class="preco">R$ 150</div>
+                    <p>4 horas - Sessões médias</p>
+                    <a href="login-tatuador.html" class="btn-outline" style="padding: 8px 20px; text-decoration:none; display:inline-block;">Reservar</a>
+                </div>
+                <div class="plano-card">
+                    <i class="fas fa-calendar-day"></i>
+                    <h3>Dia Inteiro</h3>
+                    <div class="preco">R$ 250</div>
+                    <p>8 horas - Projetos maiores</p>
+                    <a href="login-tatuador.html" class="btn-outline" style="padding: 8px 20px; text-decoration:none; display:inline-block;">Reservar</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Localização -->
+        <section id="localizacao">
+            <h2>Localização</h2>
+            <div class="localizacao-content">
+                <div class="info-local">
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Endereço:</strong> R. José Mascarenhas, 1051 - Vila Matilde, São Paulo - SP, 03515-000</p>
+                    <p><i class="fas fa-clock"></i> <strong>Funcionamento:</strong> Segunda a Sábado, 09h às 20h</p>
+                    <p><i class="fas fa-subway"></i> <strong>Acesso:</strong> Próximo à estação de metrô Vila Matilde</p>
+                    <p><i class="fas fa-instagram"></i> <strong>Instagram:</strong> <a href="https://www.instagram.com/casananquim/" target="_blank" style="color:#ff8800;">@casananquim</a></p>
+                </div>
+                <div class="mapa">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.5!2d-46.570!3d-23.530!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5e5e5e5e5e5%3A0x5e5e5e5e5e5e5e5!2sR.%20Jos%C3%A9%20Mascarenhas%2C%201051%20-%20Vila%20Matilde%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2003515-000!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Casa Nanquim - Todos os direitos reservados.</p>
+            <p style="margin-top: 10px;">
+                <a href="https://www.instagram.com/casananquim/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+            </p>
+            <p style="margin-top: 10px; font-size: 12px;">✦ 6 tatuadoras, 6 estilos únicos ✦ tatuagens com identidade ✦ do delicado ao autoral ✦</p>
+        </div>
+    </footer>
+
+    <script>
+        // Menu Hamburguer - Lado Direito
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = menuToggle.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+                document.body.style.overflow = 'hidden';
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.body.style.overflow = '';
+            }
+        });
+
+        function fecharMenu() {
+            navLinks.classList.remove('active');
+            const icon = menuToggle.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+            document.body.style.overflow = '';
+        }
+
+        // Fechar menu ao clicar fora
+        document.addEventListener('click', (event) => {
+            if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
+                if (navLinks.classList.contains('active')) {
+                    fecharMenu();
+                }
+            }
+        });
+
+        // Fechar menu ao redimensionar para desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                fecharMenu();
+            }
+        });
+    </script>
+</body>
+</html>

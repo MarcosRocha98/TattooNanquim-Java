@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Casa Nanquim</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
+        .navbar { background: #000; padding: 1rem 2rem; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo { font-size: 1.5rem; font-weight: 700; text-decoration: none; color: white; }
+        .logo span { color: #ff8800; }
+        .user-info { display: flex; align-items: center; gap: 20px; }
+        .user-name { color: #ff8800; font-weight: 500; }
+        .btn-sair { background: #ff4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .card { background: #111; border-radius: 16px; padding: 24px; margin-bottom: 30px; border: 1px solid #222; }
+        .card h2 { margin-bottom: 20px; border-left: 4px solid #ff8800; padding-left: 15px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 700; color: #ff8800; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #222; }
+        th { background: #1a1a1a; color: #ff8800; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-pendente { background: #ff8800; color: black; }
+        .status-confirmado { background: #00c851; color: white; }
+        .status-cancelado { background: #ff4444; color: white; }
+        .status-concluido { background: #33b5e5; color: white; }
+        .btn-reservar { background: #ff8800; color: black; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-bottom: 20px; }
+        @media (max-width: 768px) { .navbar { flex-direction: column; gap: 15px; } table { font-size: 12px; } th, td { padding: 8px; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">⚡ CASA <span>NANQUIM</span></a>
+        <div class="user-info">
+            <span class="user-name" id="userName"></span>
+            <button class="btn-sair" onclick="logout()">Sair</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>📊 Minhas Estatísticas</h2>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card"><div class="stat-number" id="totalSolicitacoes">0</div><div>Total de Solicitações</div></div>
+                <div class="stat-card"><div class="stat-number" id="solicitacoesPendentes">0</div><div>Solicitações Pendentes</div></div>
+                <div class="stat-card"><div class="stat-number" id="solicitacoesAprovadas">0</div><div>Solicitações Aprovadas</div></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <h2>📋 Minhas Solicitações</h2>
+                <button class="btn-reservar" onclick="window.location.href='solicitar-reserva.html'">+ Nova Solicitação</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>ID</th><th>Data</th><th>Horário Início</th><th>Horário Fim</th><th>Período</th><th>Valor</th><th>Status</th><th>Observação</th></tr></thead>
+                    <tbody id="solicitacoesBody"><tr><td colspan="8" style="text-align:center;">Carregando...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8888/CasaNanquim/api';
+
+        function verificarLogin() {
+            const tatuadorId = localStorage.getItem('tatuadorId');
+            const tatuadorNome = localStorage.getItem('tatuadorNome');
+            if (!tatuadorId) { window.location.href = 'login.html'; return false; }
+            document.getElementById('userName').innerHTML = `<i class="fas fa-user"></i> ${tatuadorNome}`;
+            return true;
+        }
+
+        async function carregarSolicitacoes() {
+            try {
+                const response = await fetch(`${API_URL}/tatuador/solicitacoes`);
+                if (response.status === 401 || response.status === 403) { window.location.href = 'login.html'; return; }
+                const solicitacoes = await response.json();
+                renderSolicitacoes(solicitacoes);
+                renderStats(solicitacoes);
+            } catch (error) { console.error('Erro:', error); }
+        }
+
+        function renderSolicitacoes(solicitacoes) {
+            const tbody = document.getElementById('solicitacoesBody');
+            if (!solicitacoes || solicitacoes.length === 0) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Nenhuma solicitação encontrada</td></tr>'; return; }
+            tbody.innerHTML = solicitacoes.map(s => {
+                let statusClass = '';
+                if (s.status === 'PENDENTE') statusClass = 'status-pendente';
+                else if (s.status === 'CONFIRMADO') statusClass = 'status-confirmado';
+                else if (s.status === 'CANCELADO') statusClass = 'status-cancelado';
+                else if (s.status === 'CONCLUIDO') statusClass = 'status-concluido';
+                return `<tr><td>${s.id}</td><td>${s.dataSolicitacao || '-'}</td><td>${s.horarioInicio || '-'}</td><td>${s.horarioFim || '-'}</td><td>${s.periodoEscolhido || '-'}</td><td>R$ ${(s.valor || 0).toFixed(2)}</td><td><span class="status-badge ${statusClass}">${s.status || 'PENDENTE'}</span></td><td>${s.observacao ? s.observacao.substring(0, 30) : '-'}</td></tr>`;
+            }).join('');
+        }
+
+        function renderStats(solicitacoes) {
+            const total = solicitacoes.length;
+            const pendentes = solicitacoes.filter(s => s.status === 'PENDENTE').length;
+            const aprovadas = solicitacoes.filter(s => s.status === 'CONFIRMADO' || s.status === 'CONCLUIDO').length;
+            document.getElementById('totalSolicitacoes').innerText = total;
+            document.getElementById('solicitacoesPendentes').innerText = pendentes;
+            document.getElementById('solicitacoesAprovadas').innerText = aprovadas;
+        }
+
+        function logout() { localStorage.removeItem('tatuadorId'); localStorage.removeItem('tatuadorNome'); window.location.href = 'index.html'; }
+
+        if (verificarLogin()) carregarSolicitacoes();
+    </script>
+</body>
+</html>
