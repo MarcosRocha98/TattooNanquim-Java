@@ -17,16 +17,17 @@
         .logo p { color: #888; margin-top: 5px; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
-        .form-group input { width: 100%; padding: 12px 16px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; }
-        .btn-login { width: 100%; background: #ff8800; color: black; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        .form-group input { width: 100%; padding: 12px 16px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #ff8800; }
+        .btn-login { width: 100%; background: #ff8800; color: black; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px; font-size: 1rem; }
         .btn-login:hover { background: #ffaa33; }
-        .btn-cadastro { width: 100%; background: transparent; border: 1px solid #ff8800; color: #ff8800; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-cadastro { width: 100%; background: transparent; border: 1px solid #ff8800; color: #ff8800; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px; font-size: 1rem; }
         .btn-cadastro:hover { background: #ff8800; color: black; }
         .error-message { background: #3b1f1f; border: 1px solid #ff4444; color: #ff8888; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; display: none; }
-        .register-link { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #222; }
-        .register-link a { color: #ff8800; text-decoration: none; }
         .back-link { text-align: center; margin-top: 15px; }
         .back-link a { color: #888; text-decoration: none; }
+        .back-link a:hover { color: #ff8800; }
     </style>
 </head>
 <body>
@@ -34,7 +35,7 @@
         <div class="login-card">
             <div class="logo">
                 <h1>CASA <span>NANQUIM</span></h1>
-                <p>Área do Tatuador</p>
+                <p>Area do Tatuador</p>
             </div>
 
             <div id="errorMessage" class="error-message"></div>
@@ -46,53 +47,66 @@
                 </div>
                 <div class="form-group">
                     <label>Senha</label>
-                    <input type="password" id="senha" placeholder="••••••" required>
+                    <input type="password" id="senha" placeholder="senha" required>
                 </div>
-                <button type="submit" class="btn-login">Entrar</button>
+                <button type="submit" class="btn-login" id="btnLogin">Entrar</button>
             </form>
 
             <button class="btn-cadastro" onclick="window.location.href='cadastro.html'">Cadastrar-se</button>
 
             <div class="back-link">
-                <a href="index.html">← Voltar para o site</a>
+                <a href="index.html">Voltar para o site</a>
             </div>
         </div>
     </div>
 
     <script>
-        const API_URL = 'http://localhost:8888/CasaNanquim/api';
+        var host = window.location.hostname;
+        var API_URL;
+        if (host === '' || host === 'localhost' || host === '127.0.0.1') {
+            API_URL = 'http://localhost:8888/CasaNanquim/api';
+        } else {
+            API_URL = 'http://' + host + ':8888/CasaNanquim/api';
+        }
 
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const email = document.getElementById('email').value.trim();
-            const senha = document.getElementById('senha').value;
-            const errorDiv = document.getElementById('errorMessage');
-            
+
+            var email = document.getElementById('email').value.trim();
+            var senha = document.getElementById('senha').value;
+            var errorDiv = document.getElementById('errorMessage');
+            var btnLogin = document.getElementById('btnLogin');
+
             errorDiv.style.display = 'none';
-            
-            try {
-                const response = await fetch(`${API_URL}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, senha })
-                });
-                
-                const result = await response.json();
-                
+            btnLogin.disabled = true;
+            btnLogin.textContent = 'Entrando...';
+
+            fetch(API_URL + '/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: email, senha: senha })
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
                 if (result.success) {
                     localStorage.setItem('tatuadorId', result.tatuadorId);
                     localStorage.setItem('tatuadorNome', result.tatuadorNome);
                     window.location.href = 'dashboard-tatuador.html';
                 } else {
                     errorDiv.style.display = 'block';
-                    errorDiv.innerHTML = '❌ ' + (result.error || 'Email ou senha inválidos!');
+                    errorDiv.textContent = 'Email ou senha invalidos!';
                 }
-            } catch (error) {
+            })
+            .catch(function(error) {
                 errorDiv.style.display = 'block';
-                errorDiv.innerHTML = '❌ Erro ao conectar com o servidor. Verifique se o Tomcat está rodando.';
-                console.error('Erro:', error);
-            }
+                errorDiv.textContent = 'Erro de conexao. Abra via: http://' + (host || 'IP-DO-SERVIDOR') + ':8888/CasaNanquim/login-tatuador.html';
+                console.error('API_URL:', API_URL, 'Erro:', error);
+            })
+            .finally(function() {
+                btnLogin.disabled = false;
+                btnLogin.textContent = 'Entrar';
+            });
         });
     </script>
 </body>
