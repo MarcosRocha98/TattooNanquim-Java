@@ -7,165 +7,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #0a0a0a;
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .cadastro-container {
-            max-width: 550px;
-            width: 100%;
-            margin: 20px;
-        }
-
-        .cadastro-card {
-            background: #111;
-            border-radius: 24px;
-            padding: 40px;
-            border: 1px solid #222;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo h1 {
-            font-size: 1.8rem;
-        }
-
-        .logo span {
-            color: #ff8800;
-        }
-
-        .logo p {
-            color: #888;
-            margin-top: 5px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: white;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #ff8800;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-
-        .form-row .form-group {
-            flex: 1;
-        }
-
-        .btn-cadastrar {
-            width: 100%;
-            background: #ff8800;
-            color: black;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .btn-cadastrar:hover {
-            background: #ffaa33;
-            transform: scale(1.02);
-        }
-
-        .error-message {
-            background: #3b1f1f;
-            border: 1px solid #ff4444;
-            color: #ff8888;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .success-message {
-            background: #0f3b1f;
-            border: 1px solid #00c851;
-            color: #a5f0c0;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #222;
-        }
-
-        .login-link a {
-            color: #ff8800;
-            text-decoration: none;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        .back-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .back-link a {
-            color: #888;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .back-link a:hover {
-            color: #ff8800;
-        }
-
-        @media (max-width: 550px) {
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .cadastro-container { max-width: 550px; width: 100%; margin: 20px; }
+        .cadastro-card { background: #111; border-radius: 24px; padding: 40px; border: 1px solid #222; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .logo { text-align: center; margin-bottom: 30px; }
+        .logo h1 { font-size: 1.8rem; }
+        .logo span { color: #ff8800; }
+        .logo p { color: #888; margin-top: 5px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 12px 16px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s; }
+        .form-group input:focus { outline: none; border-color: #ff8800; }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+        .btn-cadastrar { width: 100%; background: #ff8800; color: black; padding: 12px; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s; margin-top: 10px; }
+        .btn-cadastrar:hover { background: #ffaa33; transform: scale(1.02); }
+        .btn-cadastrar:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .error-message { background: #3b1f1f; border: 1px solid #ff4444; color: #ff8888; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; display: none; }
+        .success-message { background: #0f3b1f; border: 1px solid #00c851; color: #a5f0c0; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; display: none; }
+        .login-link { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #222; }
+        .login-link a { color: #ff8800; text-decoration: none; }
+        .login-link a:hover { text-decoration: underline; }
+        .back-link { text-align: center; margin-top: 15px; }
+        .back-link a { color: #888; text-decoration: none; font-size: 0.9rem; }
+        .back-link a:hover { color: #ff8800; }
+        @media (max-width: 550px) { .form-row { flex-direction: column; gap: 0; } }
     </style>
 </head>
 <body>
@@ -176,8 +43,8 @@
                 <p>Cadastro de Tatuador</p>
             </div>
 
-            <div id="errorMessage" class="error-message" style="display: none;"></div>
-            <div id="successMessage" class="success-message" style="display: none;"></div>
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
 
             <form id="cadastroForm">
                 <div class="form-group">
@@ -195,11 +62,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Senha *</label>
-                        <input type="password" id="senha" placeholder="Digite sua senha" required>
+                        <input type="password" id="senha" placeholder="Mínimo 6 caracteres" required minlength="6">
                     </div>
                     <div class="form-group">
                         <label>Confirmar senha *</label>
-                        <input type="password" id="confirmarSenha" placeholder="Confirme sua senha" required>
+                        <input type="password" id="confirmarSenha" placeholder="Repita a senha" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -210,11 +77,12 @@
                     <label>Especialidade (opcional)</label>
                     <input type="text" id="especialidade" placeholder="Ex: Realismo, Aquarela, Old School...">
                 </div>
-                <button type="submit" class="btn-cadastrar">Cadastrar</button>
+                <button type="submit" class="btn-cadastrar" id="btnCadastrar">Cadastrar</button>
             </form>
 
             <div class="login-link">
-                <p>Já tem cadastro? <a href="login.html">Faça login aqui</a></p>
+                <!-- CORRIGIDO: link apontava para login.html (inexistente), corrigido para login-tatuador.html -->
+                <p>Já tem cadastro? <a href="login-tatuador.html">Faça login aqui</a></p>
             </div>
             <div class="back-link">
                 <a href="index.html">← Voltar para o site</a>
@@ -223,64 +91,73 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:8888/CasaNanquim/api';
-
+        var host = window.location.hostname;
+        var API_URL = (host === "" || host === "localhost" || host === "127.0.0.1")
+            ? "http://localhost:8888/CasaNanquim/api"
+            : "http://" + host + ":8888/CasaNanquim/api";
+    </script>
+    <script>
         document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const nome = document.getElementById('nome').value;
-            const email = document.getElementById('email').value;
-            const telefone = document.getElementById('telefone').value;
+
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
             const senha = document.getElementById('senha').value;
             const confirmarSenha = document.getElementById('confirmarSenha').value;
-            const instagram = document.getElementById('instagram').value;
-            const especialidade = document.getElementById('especialidade').value;
-            
+            const instagram = document.getElementById('instagram').value.trim();
+            const especialidade = document.getElementById('especialidade').value.trim();
+
             const errorDiv = document.getElementById('errorMessage');
             const successDiv = document.getElementById('successMessage');
-            
+            const btnCadastrar = document.getElementById('btnCadastrar');
+
             errorDiv.style.display = 'none';
             successDiv.style.display = 'none';
-            
-            // Validar senhas
+
             if (senha !== confirmarSenha) {
                 errorDiv.style.display = 'block';
-                errorDiv.innerHTML = '❌ As senhas não coincidem!';
+                errorDiv.textContent = '❌ As senhas não coincidem!';
                 return;
             }
-            
-            if (senha.length < 4) {
+
+            // CORRIGIDO: mínimo de 6 caracteres (era 4, muito fraco)
+            if (senha.length < 6) {
                 errorDiv.style.display = 'block';
-                errorDiv.innerHTML = '❌ A senha deve ter pelo menos 4 caracteres!';
+                errorDiv.textContent = '❌ A senha deve ter pelo menos 6 caracteres!';
                 return;
             }
-            
+
+            btnCadastrar.disabled = true;
+            btnCadastrar.textContent = 'Cadastrando...';
+
             try {
                 const response = await fetch(`${API_URL}/cadastrar`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        nome, email, senha, telefone, instagram, especialidade 
-                    })
+                    body: JSON.stringify({ nome, email, senha, telefone, instagram, especialidade })
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
                     successDiv.style.display = 'block';
-                    successDiv.innerHTML = '✅ Cadastro realizado com sucesso! Redirecionando para o login...';
-                    
+                    successDiv.textContent = '✅ Cadastro realizado com sucesso! Redirecionando para o login...';
                     setTimeout(() => {
-                        window.location.href = 'login.html';
+                        // CORRIGIDO: redirecionava para login.html (inexistente)
+                        window.location.href = 'login-tatuador.html';
                     }, 2000);
                 } else {
                     errorDiv.style.display = 'block';
-                    errorDiv.innerHTML = '❌ ' + (result.error || 'Erro ao cadastrar. Tente novamente!');
+                    errorDiv.textContent = '❌ ' + (result.error || 'Erro ao cadastrar. Tente novamente!');
                 }
             } catch (error) {
                 errorDiv.style.display = 'block';
-                errorDiv.innerHTML = '❌ Erro ao conectar com o servidor. Verifique se o Tomcat está rodando.';
+                errorDiv.textContent = '❌ Erro ao conectar com o servidor. Verifique se o Tomcat está rodando.';
                 console.error('Erro:', error);
+            } finally {
+                btnCadastrar.disabled = false;
+                btnCadastrar.textContent = 'Cadastrar';
             }
         });
     </script>
