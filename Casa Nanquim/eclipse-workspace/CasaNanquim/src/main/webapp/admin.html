@@ -1,293 +1,717 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Casa Nanquim</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0a0a0a; color: white; font-family: 'Inter', sans-serif; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f5f1">
+  <title>Admin | Casa Nanquim</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-        /* SIDEBAR */
-        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: #000; border-right: 1px solid #222; padding: 28px 20px; overflow-y: auto; }
-        .sidebar h2 { font-size: 1.3rem; margin-bottom: 8px; }
-        .sidebar h2 span { color: #ff8800; }
-        .sidebar .user-info { background: #111; border-radius: 8px; padding: 10px 14px; margin-bottom: 24px; text-align: center; font-size: 0.85rem; color: #ff8800; }
-        .sidebar nav a { display: flex; align-items: center; gap: 10px; color: #bbb; text-decoration: none; padding: 10px 12px; margin: 3px 0; border-radius: 8px; cursor: pointer; transition: background 0.2s; font-size: 0.92rem; }
-        .sidebar nav a:hover, .sidebar nav a.active { background: #1a1a1a; color: #fff; }
-        .sidebar nav a.active { border-left: 3px solid #ff8800; }
-        .logout-btn { background: #ff4444; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; margin-top: 24px; width: 100%; font-weight: 600; }
-        .logout-btn:hover { background: #cc0000; }
+  <style>
+    /* ============================================================
+       CASA NANQUIM — ADMIN
+       Sistema visual idêntico ao repositório principal
+       ============================================================ */
+    :root {
+      --paper:        #f7f5f1;
+      --paper-warm:   #f0ede7;
+      --ink:          #141414;
+      --ink-mid:      #2a2a2a;
+      --ink-light:    #5a5a5a;
+      --ink-faint:    rgba(20,20,20,0.055);
+      --ink-border:   rgba(20,20,20,0.10);
+      --ink-border-h: rgba(20,20,20,0.22);
+      --accent:       #8b7355;
+      --accent-light: rgba(139,115,85,0.12);
+      --font-d: 'Cormorant Garamond', serif;
+      --font-b: 'DM Sans', sans-serif;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-inout:    cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+      --sidebar-w: 256px;
+    }
 
-        /* MAIN */
-        .main-content { margin-left: 260px; padding: 28px; }
+    html { overflow-x: hidden; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* CARDS */
-        .card { background: #111; border-radius: 16px; padding: 24px; margin-bottom: 24px; border: 1px solid #222; }
-        .card h3 { margin-bottom: 20px; border-left: 4px solid #ff8800; padding-left: 14px; font-size: 1.05rem; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-b);
+      font-size: 15px; line-height: 1.65;
+    }
 
-        /* TABELAS */
-        .table-wrap { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 700px; }
-        th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid #1e1e1e; font-size: 0.88rem; vertical-align: middle; }
-        th { background: #161616; color: #ff8800; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        tr:hover td { background: #141414; }
+    /* ===== TEXTURA ===== */
+    .paper-grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
 
-        /* BOTÕES */
-        .btn { border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
-        .btn:hover { opacity: 0.85; }
-        .btn-analisar  { background: #ff8800; color: #000; }
-        .btn-danger    { background: #ff4444; color: #fff; }
-        .btn-salvar    { background: #00c851; color: #fff; }
-        .btn-add       { background: #1a6fcf; color: #fff; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.85rem; margin-top: 12px; }
-        .btn-add:hover { background: #1558a8; }
+    /* ===== BLOBS (desktop) ===== */
+    .ink-canvas {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .ink-blob {
+      position: absolute;
+      border-radius: 60% 40% 55% 45% / 48% 52% 48% 52%;
+      filter: blur(50px); will-change: transform;
+      animation: blobDrift var(--blob-dur,30s) ease-in-out infinite;
+    }
+    .ink-blob:nth-child(1) { width:520px; height:520px; top:-160px; left:-160px; background:radial-gradient(ellipse,rgba(20,20,20,.055),transparent 70%); --blob-dur:35s; }
+    .ink-blob:nth-child(2) { width:600px; height:600px; bottom:-200px; right:-200px; background:radial-gradient(ellipse,rgba(20,20,20,.04),transparent 70%); --blob-dur:42s; animation-delay:-12s; }
+    .ink-blob:nth-child(3) { width:340px; height:340px; top:42%; left:58%; background:radial-gradient(ellipse,rgba(139,115,85,.035),transparent 70%); --blob-dur:28s; animation-delay:-7s; }
+    @keyframes blobDrift {
+      0%,100%{ transform:translate3d(0,0,0) scale(1);        border-radius:60% 40% 55% 45%/48% 52% 48% 52%; }
+      25%    { transform:translate3d(28px,-22px,0) scale(1.02); border-radius:45% 55% 48% 52%/52% 48% 55% 45%; }
+      50%    { transform:translate3d(-20px,18px,0) scale(.98);  border-radius:55% 45% 52% 48%/45% 55% 48% 52%; }
+      75%    { transform:translate3d(16px,30px,0) scale(1.01);  border-radius:48% 52% 45% 55%/55% 45% 52% 48%; }
+    }
+    .ink-stroke {
+      position: absolute; height: 1px;
+      background: linear-gradient(90deg,transparent,rgba(20,20,20,.07),transparent);
+      filter: blur(3px); animation: strokeDrift 18s ease-in-out infinite;
+    }
+    .ink-stroke:nth-child(4){ width:55%; top:25%; left:-5%; }
+    .ink-stroke:nth-child(5){ width:40%; bottom:35%; right:-5%; animation-duration:24s; animation-delay:-5s; }
+    @keyframes strokeDrift{ 0%,100%{ transform:translateX(-30px); opacity:.25; } 50%{ transform:translateX(30px); opacity:.55; } }
 
-        /* BADGES */
-        .badge { display: inline-block; padding: 3px 11px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-        .badge-pendente   { background: #ff8800; color: #000; }
-        .badge-confirmado { background: #00c851; color: #fff; }
-        .badge-cancelado  { background: #ff4444; color: #fff; }
-        .badge-concluido  { background: #33b5e5; color: #fff; }
+    /* ===== SIDEBAR ===== */
+    /* .sidebar preservada — JS não depende dela por classe, só por IDs internos */
+    .sidebar {
+      position: fixed; left: 0; top: 0;
+      width: var(--sidebar-w); height: 100vh;
+      background: var(--ink);
+      border-right: 1px solid rgba(247,245,241,.06);
+      padding: 30px 18px 22px;
+      overflow-y: auto; z-index: 100;
+      display: flex; flex-direction: column;
+    }
+    .sidebar::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: .55;
+    }
 
-        /* STATS */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
-        .stat-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; }
-        .stat-number { font-size: 2rem; font-weight: 700; color: #ff8800; }
-        .stat-label { color: #888; font-size: 0.8rem; margin-top: 4px; }
+    .sidebar-brand {
+      display: flex; flex-direction: column; margin-bottom: 6px;
+      text-align: center;
+    }
+    .sidebar-brand img {
+    max-height: 48px;
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+    display: block;
+    margin: 0 auto 10px;
+	}
+    .sidebar-brand-name {
+      font-family: var(--font-d);
+      font-size: 1.25rem; font-weight: 600;
+      color: rgba(247,245,241,.9); letter-spacing: -.5px; line-height: 1;
+    }
+    .sidebar-brand-name em { font-style: italic; font-weight: 300; opacity: .65; }
+    .sidebar-brand-sub {
+      font-size: .52rem; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(247,245,241,.22); margin-top: 5px; font-family: var(--font-b);
+    }
 
-        /* AVISO */
-        .aviso { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; display: none; font-size: 0.9rem; }
-        .aviso-erro  { background: #3b1f1f; border: 1px solid #ff4444; color: #ff8888; }
-        .aviso-ok    { background: #0f3b1f; border: 1px solid #00c851; color: #a5f0c0; }
+    .sidebar-sep {
+      height: 1px; margin: 16px 0;
+      background: linear-gradient(90deg,rgba(247,245,241,.07),transparent);
+    }
 
-        /* CONFIG */
-        .config-tag { display: inline-flex; align-items: center; gap: 6px; background: #1a1a1a; border: 1px solid #333; padding: 6px 14px; margin: 4px; border-radius: 20px; font-size: 0.85rem; }
-        .config-tag button { background: none; border: none; color: #ff4444; cursor: pointer; font-size: 1rem; line-height: 1; padding: 0; }
-        .config-tag button:hover { color: #ff0000; }
+    .user-badge {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(247,245,241,.04);
+      border: 1px solid rgba(247,245,241,.07);
+      padding: 9px 13px; margin-bottom: 22px;
+    }
+    .user-badge i { color: var(--accent); font-size: .85rem; }
+    .user-badge span {
+      font-size: .68rem; color: rgba(247,245,241,.45);
+      letter-spacing: 1px; text-transform: uppercase;
+    }
 
-        /* PREÇO EDITAR */
-        .preco-edit { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: #1a1a1a; padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
-        .preco-edit strong { min-width: 160px; font-size: 0.92rem; }
-        .preco-edit input { background: #0a0a0a; border: 1px solid #ff8800; padding: 7px 12px; border-radius: 6px; color: white; width: 90px; text-align: center; font-size: 0.95rem; }
+    /* .sidebar nav a / .active: preservados — JS usa classList */
+    .sidebar nav { flex: 1; }
+    .sidebar nav a {
+      display: flex; align-items: center; gap: 11px;
+      color: rgba(247,245,241,.38); text-decoration: none;
+      padding: 9px 12px; margin: 2px 0; cursor: pointer;
+      font-size: .68rem; font-weight: 500;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      font-family: var(--font-b);
+      border-left: 2px solid transparent;
+      transition: color .3s var(--ease-inout), background .3s var(--ease-inout), border-color .3s;
+    }
+    .sidebar nav a i { font-size: .78rem; width: 16px; text-align: center; }
+    .sidebar nav a:hover { color: rgba(247,245,241,.82); background: rgba(247,245,241,.04); }
+    .sidebar nav a.active {
+      color: var(--paper); background: rgba(247,245,241,.06);
+      border-left-color: var(--accent);
+    }
 
-        /* SELECT na tabela */
-        td select { background: #1a1a1a; color: white; border: 1px solid #333; padding: 4px 8px; border-radius: 5px; font-size: 12px; cursor: pointer; }
+    /* .logout-btn preservada */
+    .logout-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: transparent; border: 1px solid rgba(247,245,241,.09);
+      color: rgba(247,245,241,.3); padding: 10px; margin-top: 18px; width: 100%;
+      font-size: .65rem; font-weight: 500; letter-spacing: 1.5px;
+      text-transform: uppercase; cursor: pointer; font-family: var(--font-b);
+      transition: all .3s var(--ease-inout);
+    }
+    .logout-btn:hover {
+      background: rgba(247,245,241,.06); border-color: rgba(247,245,241,.18);
+      color: rgba(247,245,241,.68);
+    }
 
-        /* ======================================================
-           MODAL DE DETALHES
-           ====================================================== */
-        .modal-bg {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.88); z-index: 2000;
-            align-items: flex-start; justify-content: center;
-            padding: 40px 16px; overflow-y: auto;
-        }
-        .modal-bg.ativo { display: flex; }
-        .modal-box {
-            background: #111; border: 1px solid #2a2a2a;
-            border-radius: 20px; width: 100%; max-width: 660px;
-            margin: auto; animation: popIn .2s ease;
-            display: flex; flex-direction: column;
-        }
-        @keyframes popIn { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+    /* ===== MAIN ===== */
+    /* .main-content preservada */
+    .main-content {
+      margin-left: var(--sidebar-w); padding: 36px 30px 60px;
+      position: relative; z-index: 10; min-height: 100vh;
+    }
 
-        .modal-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 24px; border-bottom: 1px solid #222;
-        }
-        .modal-header h3 { font-size: 1.1rem; }
-        .modal-header h3 span { color: #ff8800; }
-        .modal-fechar { background: #222; border: 1px solid #333; color: #aaa; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
-        .modal-fechar:hover { background: #333; color: #fff; }
+    /* ===== AVISO ===== */
+    /* #aviso / .aviso-erro / .aviso-ok: preservados */
+    .aviso {
+      padding: 12px 16px; margin-bottom: 18px; display: none;
+      font-size: .78rem; font-family: var(--font-b); border-left: 2px solid;
+      animation: alertIn .4s var(--ease-out-expo);
+    }
+    @keyframes alertIn{ from{ opacity:0; transform:translateY(-8px); } to{ opacity:1; transform:translateY(0); } }
+    .aviso-erro{ background:rgba(192,80,80,.04); border-color:#c05050; color:#8b3c3c; }
+    .aviso-ok  { background:rgba(58,122,58,.04);  border-color:#3a7a3a; color:#2a5c2a; }
 
-        /* Corpo rolável */
-        .modal-body { padding: 24px; overflow-y: auto; max-height: 65vh; }
+    /* ===== PAGE HEADER ===== */
+    .page-header{ margin-bottom: 32px; }
+    .page-tag{
+      font-size:.55rem; letter-spacing:4px; text-transform:uppercase;
+      color:var(--accent); font-family:var(--font-b); margin-bottom:6px;
+    }
+    .page-title{
+      font-family:var(--font-d);
+      font-size:clamp(2rem,3vw,2.8rem);
+      font-weight:500; letter-spacing:-1px; line-height:1.05;
+    }
+    .page-title em{ font-style:italic; font-weight:300; }
+    .ink-divider{
+      width:36px; height:1px; background:var(--accent);
+      opacity:.5; margin-top:12px;
+    }
 
-        /* Seções */
-        .det-secao { margin-bottom: 20px; }
-        .det-titulo { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #ff8800; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #1e1e1e; }
-        .det-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
-        .det-item label { display: block; font-size: 0.72rem; color: #555; margin-bottom: 3px; }
-        .det-item span { font-size: 0.93rem; color: #eee; font-weight: 500; word-break: break-word; }
+    /* ===== CARD ===== */
+    /* .card / .card h3: classes preservadas */
+    .card{
+      background:rgba(255,255,255,.97);
+      border:1px solid var(--ink-border);
+      padding:26px 26px 22px; margin-bottom:22px;
+      box-shadow:0 2px 12px rgba(20,20,20,.04);
+      position:relative;
+    }
+    .card::before{
+      content:''; position:absolute; top:0; left:0;
+      width:2px; height:100%;
+      background:linear-gradient(180deg,var(--accent),transparent);
+      opacity:.4;
+    }
+    .card h3{
+      font-family:var(--font-d); font-size:1.3rem;
+      font-weight:600; letter-spacing:-.5px; margin-bottom:20px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .card h3 i{ font-size:.85rem; color:var(--accent); opacity:.75; }
 
-        /* Observação com scroll */
-        .det-obs-box {
-            background: #1a1a1a; border: 1px solid #252525;
-            border-radius: 10px; padding: 14px 16px;
-            font-size: 0.9rem; color: #ddd; line-height: 1.7;
-            white-space: pre-wrap; word-break: break-word;
-            max-height: 220px; overflow-y: auto;
-            font-family: 'Inter', sans-serif;
-        }
+    /* ===== STATS ===== */
+    /* .stats-grid / .stat-card / .stat-number / .stat-label: preservadas */
+    .stats-grid{
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:14px;
+    }
+    .stat-card{
+      background:var(--paper); border:1px solid var(--ink-border);
+      padding:20px 16px; text-align:center; position:relative; overflow:hidden;
+      transition:border-color .4s var(--ease-inout), transform .4s var(--ease-out-expo), box-shadow .4s;
+    }
+    .stat-card::before{
+      content:''; position:absolute; top:0; left:0; right:0; height:1px;
+      background:linear-gradient(90deg,transparent,rgba(139,115,85,.28),transparent);
+    }
+    .stat-card:hover{ border-color:var(--ink-border-h); transform:translateY(-3px); box-shadow:0 8px 24px rgba(20,20,20,.07); }
+    .stat-number{ font-family:var(--font-d); font-size:2.1rem; font-weight:600; color:var(--accent); line-height:1; }
+    .stat-label { font-size:.6rem; color:var(--ink-light); margin-top:8px; letter-spacing:1.5px; text-transform:uppercase; }
 
-        /* Footer do modal */
-        .modal-footer {
-            border-top: 1px solid #1e1e1e; padding: 16px 24px;
-            display: flex; gap: 10px; align-items: center;
-            justify-content: space-between; flex-wrap: wrap;
-        }
-        .modal-footer select { background: #1a1a1a; color: white; border: 1px solid #333; padding: 8px 12px; border-radius: 8px; font-size: 0.88rem; }
-        .btn-mf-salvar  { background: #ff8800; color: #000; border: none; padding: 9px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
-        .btn-mf-salvar:hover { background: #ffaa33; }
-        .btn-mf-excluir { background: #ff4444; color: #fff; border: none; padding: 9px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
-        .btn-mf-excluir:hover { background: #cc0000; }
-        .btn-mf-fechar  { background: #222; color: #ccc; border: 1px solid #333; padding: 9px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.88rem; }
-        .btn-mf-fechar:hover { background: #333; }
+    /* ===== TABELAS ===== */
+    /* .table-wrap / table / th / td: seletores preservados */
+    .table-wrap{ overflow-x:auto; }
+    table{ width:100%; border-collapse:collapse; min-width:700px; }
+    th{
+      background:var(--paper-warm); color:var(--ink-light);
+      font-size:.56rem; font-weight:600; letter-spacing:2px;
+      text-transform:uppercase; padding:11px 13px; text-align:left;
+      border-bottom:1px solid var(--ink-border); font-family:var(--font-b);
+    }
+    td{
+      padding:11px 13px; border-bottom:1px solid rgba(20,20,20,.05);
+      font-size:.82rem; vertical-align:middle; color:var(--ink-mid);
+    }
+    tr:hover td{ background:rgba(139,115,85,.03); }
+    td select{
+      background:var(--paper); color:var(--ink);
+      border:1px solid var(--ink-border); padding:4px 9px;
+      font-size:.76rem; cursor:pointer; font-family:var(--font-b); outline:none;
+    }
 
-        @media (max-width: 900px) {
-            .sidebar { width: 100%; height: auto; position: relative; }
-            .main-content { margin-left: 0; }
-        }
-    </style>
+    /* ===== BADGES ===== */
+    /* .badge / .badge-*: classes preservadas */
+    .badge{
+      display:inline-block; padding:3px 11px;
+      font-size:.56rem; font-weight:700; letter-spacing:1.5px;
+      text-transform:uppercase; font-family:var(--font-b);
+    }
+    .badge-pendente  { background:rgba(139,115,85,.11); color:var(--accent);    border:1px solid rgba(139,115,85,.2); }
+    .badge-confirmado{ background:rgba(58,122,58,.08);  color:#2a5c2a;          border:1px solid rgba(58,122,58,.2); }
+    .badge-cancelado { background:rgba(192,80,80,.07);  color:#8b3c3c;          border:1px solid rgba(192,80,80,.18); }
+    .badge-concluido { background:rgba(20,100,160,.07); color:#1a5078;          border:1px solid rgba(20,100,160,.15); }
+
+    /* ===== BOTÕES ===== */
+    /* .btn / .btn-analisar / .btn-danger / .btn-salvar / .btn-add: classes preservadas */
+    .btn{
+      border:none; padding:7px 15px;
+      font-size:.65rem; font-weight:600; cursor:pointer;
+      font-family:var(--font-b); letter-spacing:1px; text-transform:uppercase;
+      transition:all .3s var(--ease-inout);
+    }
+    .btn-analisar{ background:var(--ink); color:var(--paper); border:1px solid var(--ink); }
+    .btn-analisar:hover{ background:var(--ink-mid); }
+    .btn-danger{ background:transparent; color:#c05050; border:1px solid rgba(192,80,80,.3); }
+    .btn-danger:hover{ background:rgba(192,80,80,.07); border-color:rgba(192,80,80,.5); }
+    .btn-salvar{ background:transparent; color:#2a5c2a; border:1px solid rgba(58,122,58,.3); }
+    .btn-salvar:hover{ background:rgba(58,122,58,.07); border-color:rgba(58,122,58,.5); }
+
+    .btn-add{
+      display:inline-flex; align-items:center; gap:7px;
+      background:var(--ink); color:var(--paper); border:none;
+      padding:10px 22px; cursor:pointer; font-weight:500;
+      font-size:.65rem; letter-spacing:1.5px; text-transform:uppercase;
+      margin-top:14px; font-family:var(--font-b);
+      transition:background .3s var(--ease-inout), transform .3s var(--ease-out-expo), box-shadow .3s;
+    }
+    .btn-add:hover{ background:var(--ink-mid); transform:translateY(-2px); box-shadow:0 8px 20px rgba(20,20,20,.12); }
+
+    /* ===== CONFIGURAÇÕES ===== */
+    /* .config-tag: preservada */
+    .config-tag{
+      display:inline-flex; align-items:center; gap:7px;
+      background:var(--paper-warm); border:1px solid var(--ink-border);
+      padding:6px 13px; margin:4px;
+      font-size:.76rem; font-family:var(--font-b); color:var(--ink-mid);
+    }
+    .config-tag button{ background:none; border:none; color:#c05050; cursor:pointer; font-size:1rem; line-height:1; padding:0; transition:color .2s; }
+    .config-tag button:hover{ color:#8b3c3c; }
+
+    /* ===== PREÇOS ===== */
+    /* .preco-edit: preservada */
+    .preco-edit{
+      display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+      background:var(--paper-warm); border:1px solid var(--ink-border);
+      padding:14px 16px; margin-bottom:10px;
+      transition:border-color .3s;
+    }
+    .preco-edit:hover{ border-color:var(--ink-border-h); }
+    .preco-edit strong{ min-width:160px; font-size:.84rem; font-weight:500; }
+    .preco-edit input{
+      background:#fff; border:1px solid var(--ink-border);
+      padding:7px 12px; color:var(--ink);
+      width:100px; text-align:center; font-size:.88rem;
+      font-family:var(--font-b); outline:none;
+      transition:border-color .3s var(--ease-inout);
+    }
+    .preco-edit input:focus{ border-color:var(--ink-border-h); }
+
+    /* ===== MODAL ===== */
+    /* .modal-bg / .modal-bg.ativo / .modal-box / .modal-header /
+       .modal-fechar / .modal-body / .modal-footer: classes preservadas */
+    .modal-bg{
+      display:none; position:fixed; inset:0;
+      background:rgba(20,20,20,.7); backdrop-filter:blur(6px);
+      z-index:2000; align-items:flex-start; justify-content:center;
+      padding:40px 16px; overflow-y:auto;
+    }
+    .modal-bg.ativo{ display:flex; }
+
+    .modal-box{
+      background:var(--paper); border:1px solid var(--ink-border);
+      width:100%; max-width:660px; margin:auto;
+      display:flex; flex-direction:column; position:relative;
+      animation:popIn .25s var(--ease-out-expo);
+    }
+    .modal-box::before{
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg,var(--accent),transparent); opacity:.45;
+    }
+    @keyframes popIn{ from{ transform:scale(.94); opacity:0; } to{ transform:scale(1); opacity:1; } }
+
+    .modal-header{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:20px 24px; border-bottom:1px solid var(--ink-border);
+    }
+    .modal-header h3{
+      font-family:var(--font-d); font-size:1.3rem; font-weight:600; letter-spacing:-.5px;
+    }
+    .modal-header h3 span{ color:var(--accent); }
+
+    .modal-fechar{
+      background:var(--paper-warm); border:1px solid var(--ink-border);
+      color:var(--ink-light); width:30px; height:30px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; font-size:.8rem;
+      transition:all .25s var(--ease-inout);
+    }
+    .modal-fechar:hover{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+
+    .modal-body{ padding:24px; overflow-y:auto; max-height:62vh; }
+
+    /* .det-*: classes preservadas */
+    .det-secao{ margin-bottom:20px; }
+    .det-titulo{
+      font-size:.55rem; text-transform:uppercase; letter-spacing:3px;
+      color:var(--accent); margin-bottom:11px; padding-bottom:5px;
+      border-bottom:1px solid var(--ink-border); font-family:var(--font-b);
+    }
+    .det-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:13px; }
+    .det-item label{
+      display:block; font-size:.58rem; color:var(--ink-light);
+      margin-bottom:4px; letter-spacing:1px; text-transform:uppercase;
+    }
+    .det-item span{ font-size:.88rem; color:var(--ink); font-weight:500; word-break:break-word; }
+
+    .det-obs-box{
+      background:var(--paper-warm); border:1px solid var(--ink-border);
+      padding:13px 15px; font-size:.83rem; color:var(--ink-mid);
+      line-height:1.7; white-space:pre-wrap; word-break:break-word;
+      max-height:180px; overflow-y:auto; font-family:var(--font-b);
+    }
+
+    .modal-footer{
+      border-top:1px solid var(--ink-border); padding:16px 24px;
+      display:flex; gap:10px; align-items:center;
+      justify-content:space-between; flex-wrap:wrap;
+    }
+    .modal-footer select{
+      background:var(--paper-warm); color:var(--ink);
+      border:1px solid var(--ink-border); padding:7px 11px;
+      font-size:.78rem; font-family:var(--font-b); outline:none;
+    }
+
+    /* .btn-mf-*: classes preservadas */
+    .btn-mf-salvar{
+      background:var(--ink); color:var(--paper); border:none;
+      padding:9px 20px; font-weight:600; cursor:pointer;
+      font-size:.67rem; letter-spacing:1px; text-transform:uppercase;
+      font-family:var(--font-b);
+      transition:background .3s var(--ease-inout), transform .3s;
+    }
+    .btn-mf-salvar:hover{ background:var(--ink-mid); transform:translateY(-1px); }
+
+    .btn-mf-excluir{
+      background:transparent; color:#c05050;
+      border:1px solid rgba(192,80,80,.3);
+      padding:9px 20px; font-weight:600; cursor:pointer;
+      font-size:.67rem; letter-spacing:1px; text-transform:uppercase;
+      font-family:var(--font-b);
+      transition:all .3s var(--ease-inout);
+    }
+    .btn-mf-excluir:hover{ background:rgba(192,80,80,.07); border-color:rgba(192,80,80,.5); }
+
+    .btn-mf-fechar{
+      background:transparent; color:var(--ink-light);
+      border:1px solid var(--ink-border);
+      padding:9px 20px; font-weight:500; cursor:pointer;
+      font-size:.67rem; letter-spacing:1px; text-transform:uppercase;
+      font-family:var(--font-b);
+      transition:all .3s var(--ease-inout);
+    }
+    .btn-mf-fechar:hover{ background:var(--ink-faint); border-color:var(--ink-border-h); color:var(--ink); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar{ width:5px; height:5px; }
+    ::-webkit-scrollbar-track{ background:var(--paper-warm); }
+    ::-webkit-scrollbar-thumb{ background:rgba(20,20,20,.2); border-radius:4px; }
+    ::-webkit-scrollbar-thumb:hover{ background:rgba(20,20,20,.4); }
+    ::selection{ background:rgba(139,115,85,.15); }
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:900px){
+      :root{ --sidebar-w:0px; }
+      .sidebar{
+        position:relative; width:100%; height:auto;
+        flex-direction:row; flex-wrap:wrap; gap:10px; padding:18px 14px;
+      }
+      .sidebar::after{ display:none; }
+      .sidebar nav{ display:flex; flex-wrap:wrap; gap:3px; }
+      .sidebar nav a{ padding:8px 11px; border-left:none; border-bottom:2px solid transparent; }
+      .sidebar nav a.active{ border-bottom-color:var(--accent); border-left-color:transparent; }
+      .logout-btn{ width:auto; padding:9px 14px; margin-top:0; }
+      .main-content{ margin-left:0; padding:20px 14px 40px; }
+      .ink-canvas{ display:none; }
+    }
+    @media(max-width:600px){
+      .stats-grid{ grid-template-columns:repeat(2,1fr); }
+      .card{ padding:16px 14px; }
+      .card h3{ font-size:1.1rem; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
+<div class="ink-canvas" aria-hidden="true">
+  <div class="ink-blob"></div>
+  <div class="ink-blob"></div>
+  <div class="ink-blob"></div>
+  <div class="ink-stroke"></div>
+  <div class="ink-stroke"></div>
+</div>
+<div class="paper-grain" aria-hidden="true"></div>
+
+<!-- ==================== SIDEBAR ==================== -->
 <div class="sidebar">
-    <h2>⚡ CASA <span>NANQUIM</span></h2>
-    <div class="user-info">👤 Administrador</div>
-    <nav>
-        <a class="active" id="nav-dashboard" onclick="showSection('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</a>
-        <a id="nav-tatuadores" onclick="showSection('tatuadores')"><i class="fas fa-users"></i> Tatuadores</a>
-        <a id="nav-solicitacoes" onclick="showSection('solicitacoes')"><i class="fas fa-calendar-check"></i> Solicitações</a>
-        <a id="nav-configuracoes" onclick="showSection('configuracoes')"><i class="fas fa-cog"></i> Configurações</a>
-        <a href="index.html" target="_blank"><i class="fas fa-globe"></i> Ver Site</a>
-    </nav>
-    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+  <div class="sidebar-brand">
+    <img src="img/logooficial.png" alt="Casa Nanquim"
+         onerror="this.style.display='none'">
+    <div class="sidebar-brand-sub">Painel Administrativo</div>
+  </div>
+
+  <div class="sidebar-sep"></div>
+
+  <div class="user-badge">
+    <i class="fas fa-user-circle"></i>
+    <span>Administrador</span>
+  </div>
+
+  <nav>
+    <!-- ids preservados: nav-dashboard, nav-tatuadores, nav-solicitacoes, nav-configuracoes -->
+    <a class="active" id="nav-dashboard" onclick="showSection('dashboard')">
+      <i class="fas fa-chart-line"></i> Dashboard
+    </a>
+    <a id="nav-tatuadores" onclick="showSection('tatuadores')">
+      <i class="fas fa-users"></i> Tatuadores
+    </a>
+    <a id="nav-solicitacoes" onclick="showSection('solicitacoes')">
+      <i class="fas fa-calendar-check"></i> Solicitações
+    </a>
+    <a id="nav-configuracoes" onclick="showSection('configuracoes')">
+      <i class="fas fa-cog"></i> Configurações
+    </a>
+    <a href="index.html" target="_blank">
+      <i class="fas fa-globe"></i> Ver Site
+    </a>
+  </nav>
+
+  <div class="sidebar-sep"></div>
+
+  <!-- .logout-btn preservada — onclick="logout()" -->
+  <button class="logout-btn" onclick="logout()">
+    <i class="fas fa-sign-out-alt"></i> Sair
+  </button>
 </div>
 
-<!-- MAIN -->
+<!-- ==================== MAIN ==================== -->
+<!-- .main-content preservada -->
 <div class="main-content">
 
-    <div id="aviso" class="aviso"></div>
+  <!-- id="aviso" preservado -->
+  <div id="aviso" class="aviso"></div>
 
-    <!-- DASHBOARD -->
-    <div id="sec-dashboard">
-        <div class="card">
-            <h3>📊 Dashboard</h3>
-            <div class="stats-grid" id="statsGrid">
-                <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Carregando...</div></div>
-            </div>
-        </div>
+  <!-- ── DASHBOARD ── id="sec-dashboard" preservado -->
+  <div id="sec-dashboard">
+    <div class="page-header">
+      <div class="page-tag">✦ Visão Geral ✦</div>
+      <h1 class="page-title">Dash<em>board</em></h1>
+      <div class="ink-divider"></div>
     </div>
-
-    <!-- TATUADORES -->
-    <div id="sec-tatuadores" style="display:none;">
-        <div class="card">
-            <h3>👥 Tatuadores Cadastrados</h3>
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th><th>Instagram</th><th>Especialidade</th><th>Reservas</th><th>Cadastro</th><th>Status</th></tr></thead>
-                    <tbody id="tbTatuadores"></tbody>
-                </table>
-            </div>
+    <div class="card">
+      <h3><i class="fas fa-chart-line"></i> Resumo</h3>
+      <!-- id="statsGrid" preservado -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-number">—</div>
+          <div class="stat-label">Carregando...</div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- SOLICITAÇÕES -->
-    <div id="sec-solicitacoes" style="display:none;">
-        <div class="card">
-            <h3>📋 Solicitações de Reserva</h3>
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>ID</th><th>Tatuador</th><th>Data</th><th>Horário</th><th>Período</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead>
-                    <tbody id="tbSolicitacoes"></tbody>
-                </table>
-            </div>
-        </div>
+  <!-- ── TATUADORES ── id="sec-tatuadores" preservado -->
+  <div id="sec-tatuadores" style="display:none;">
+    <div class="page-header">
+      <div class="page-tag">✦ Cadastros ✦</div>
+      <h1 class="page-title">Tatua<em>dores</em></h1>
+      <div class="ink-divider"></div>
     </div>
-
-    <!-- CONFIGURAÇÕES -->
-    <div id="sec-configuracoes" style="display:none;">
-        <div class="card">
-            <h3>⏰ Horários de Funcionamento</h3>
-            <div id="listaHorarios"></div>
-            <button class="btn-add" onclick="adicionarHorario()"><i class="fas fa-plus"></i> Adicionar Horário</button>
-            <p style="color:#555; font-size:0.8rem; margin-top:8px;">Formato: HH:MM — ex: 09:00</p>
-        </div>
-        <div class="card">
-            <h3>📅 Dias Fechados</h3>
-            <div id="listaDias"></div>
-            <button class="btn-add" onclick="adicionarDiaFechado()"><i class="fas fa-plus"></i> Adicionar Dia Fechado</button>
-            <p style="color:#555; font-size:0.8rem; margin-top:8px;">Ex: domingo, segunda, 2025-12-25</p>
-        </div>
-        <div class="card">
-            <h3>💰 Preços do Espaço</h3>
-            <div id="listaPrecos"></div>
-        </div>
+    <div class="card">
+      <h3><i class="fas fa-users"></i> Tatuadores Cadastrados</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th>
+              <th>Instagram</th><th>Especialidade</th><th>Reservas</th>
+              <th>Cadastro</th><th>Status</th>
+            </tr>
+          </thead>
+          <!-- id="tbTatuadores" preservado -->
+          <tbody id="tbTatuadores"></tbody>
+        </table>
+      </div>
     </div>
+  </div>
 
-</div><!-- fim main-content -->
+  <!-- ── SOLICITAÇÕES ── id="sec-solicitacoes" preservado -->
+  <div id="sec-solicitacoes" style="display:none;">
+    <div class="page-header">
+      <div class="page-tag">✦ Agendamentos ✦</div>
+      <h1 class="page-title">Solicita<em>ções</em></h1>
+      <div class="ink-divider"></div>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-calendar-check"></i> Solicitações de Reserva</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Tatuador</th><th>Data</th><th>Horário</th>
+              <th>Período</th><th>Valor</th><th>Status</th><th>Ações</th>
+            </tr>
+          </thead>
+          <!-- id="tbSolicitacoes" preservado -->
+          <tbody id="tbSolicitacoes"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-<!-- ======================================================
-     MODAL DE DETALHES DA SOLICITAÇÃO
-     ====================================================== -->
+  <!-- ── CONFIGURAÇÕES ── id="sec-configuracoes" preservado -->
+  <div id="sec-configuracoes" style="display:none;">
+    <div class="page-header">
+      <div class="page-tag">✦ Parâmetros ✦</div>
+      <h1 class="page-title">Configura<em>ções</em></h1>
+      <div class="ink-divider"></div>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-clock"></i> Horários de Funcionamento</h3>
+      <!-- id="listaHorarios" preservado -->
+      <div id="listaHorarios"></div>
+      <button class="btn-add" onclick="adicionarHorario()">
+        <i class="fas fa-plus"></i> Adicionar Horário
+      </button>
+      <p style="color:var(--ink-light);font-size:.73rem;margin-top:10px;">
+        Formato: HH:MM — ex: 09:00
+      </p>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-calendar-times"></i> Dias Fechados</h3>
+      <!-- id="listaDias" preservado -->
+      <div id="listaDias"></div>
+      <button class="btn-add" onclick="adicionarDiaFechado()">
+        <i class="fas fa-plus"></i> Adicionar Dia Fechado
+      </button>
+      <p style="color:var(--ink-light);font-size:.73rem;margin-top:10px;">
+        Ex: domingo, segunda, 2025-12-25
+      </p>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-tag"></i> Preços do Espaço</h3>
+      <!-- id="listaPrecos" preservado -->
+      <div id="listaPrecos"></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ==================== MODAL ==================== -->
+<!-- id="modalDet" / .modal-bg / .modal-bg.ativo: preservados -->
 <div class="modal-bg" id="modalDet">
-    <div class="modal-box">
+  <div class="modal-box">
 
-        <div class="modal-header">
-            <h3>Solicitação <span id="det-id">#—</span></h3>
-            <button class="modal-fechar" onclick="fecharModal()">✕</button>
-        </div>
-
-        <div class="modal-body">
-
-            <div class="det-secao">
-                <div class="det-titulo">Tatuador</div>
-                <div class="det-grid">
-                    <div class="det-item"><label>Nome</label><span id="det-nome">—</span></div>
-                    <div class="det-item"><label>Status</label><span id="det-badge">—</span></div>
-                    <div class="det-item"><label>Criado em</label><span id="det-criado">—</span></div>
-                </div>
-            </div>
-
-            <div class="det-secao">
-                <div class="det-titulo">Data e Horário</div>
-                <div class="det-grid">
-                    <div class="det-item"><label>Data</label><span id="det-data">—</span></div>
-                    <div class="det-item"><label>Início</label><span id="det-inicio">—</span></div>
-                    <div class="det-item"><label>Fim</label><span id="det-fim">—</span></div>
-                    <div class="det-item"><label>Período</label><span id="det-periodo">—</span></div>
-                </div>
-            </div>
-
-            <div class="det-secao">
-                <div class="det-titulo">Financeiro</div>
-                <div class="det-grid">
-                    <div class="det-item"><label>Valor</label><span id="det-valor" style="font-size:1.1rem; font-weight:700; color:#ff8800;">—</span></div>
-                    <div class="det-item"><label>Pagamento</label><span style="color:#aaa; font-size:0.85rem;">Presencial no dia<br>(Pix / Débito / Crédito)</span></div>
-                </div>
-            </div>
-
-            <div class="det-secao">
-                <div class="det-titulo">Observação do tatuador</div>
-                <div class="det-obs-box" id="det-obs"></div>
-            </div>
-
-        </div><!-- fim modal-body -->
-
-        <div class="modal-footer">
-            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                <label style="font-size:0.82rem; color:#777;">Alterar status:</label>
-                <select id="det-select">
-                    <option value="PENDENTE">Pendente</option>
-                    <option value="CONFIRMADO">Confirmado</option>
-                    <option value="CANCELADO">Cancelado</option>
-                    <option value="CONCLUIDO">Concluído</option>
-                </select>
-                <button class="btn-mf-salvar" onclick="salvarStatusModal()"><i class="fas fa-save"></i> Salvar</button>
-            </div>
-            <div style="display:flex; gap:8px;">
-                <button class="btn-mf-fechar" onclick="fecharModal()">Fechar</button>
-                <button class="btn-mf-excluir" onclick="excluirDoModal()"><i class="fas fa-trash"></i> Excluir</button>
-            </div>
-        </div>
-
+    <div class="modal-header">
+      <h3>Solicitação <span id="det-id">#—</span></h3>
+      <button class="modal-fechar" onclick="fecharModal()">
+        <i class="fas fa-times" style="font-size:.72rem;"></i>
+      </button>
     </div>
+
+    <div class="modal-body">
+
+      <div class="det-secao">
+        <div class="det-titulo">Tatuador</div>
+        <div class="det-grid">
+          <div class="det-item"><label>Nome</label><span id="det-nome">—</span></div>
+          <div class="det-item"><label>Status</label><span id="det-badge">—</span></div>
+          <div class="det-item"><label>Criado em</label><span id="det-criado">—</span></div>
+        </div>
+      </div>
+
+      <div class="det-secao">
+        <div class="det-titulo">Data e Horário</div>
+        <div class="det-grid">
+          <div class="det-item"><label>Data</label><span id="det-data">—</span></div>
+          <div class="det-item"><label>Início</label><span id="det-inicio">—</span></div>
+          <div class="det-item"><label>Fim</label><span id="det-fim">—</span></div>
+          <div class="det-item"><label>Período</label><span id="det-periodo">—</span></div>
+        </div>
+      </div>
+
+      <div class="det-secao">
+        <div class="det-titulo">Financeiro</div>
+        <div class="det-grid">
+          <div class="det-item">
+            <label>Valor</label>
+            <span id="det-valor" style="font-size:1.2rem;font-weight:600;color:var(--accent);font-family:var(--font-d);">—</span>
+          </div>
+          <div class="det-item">
+            <label>Pagamento</label>
+            <span style="color:var(--ink-light);font-size:.78rem;line-height:1.5;">Presencial no dia<br>(Pix / Débito / Crédito)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="det-secao">
+        <div class="det-titulo">Observação do tatuador</div>
+        <!-- id="det-obs" preservado -->
+        <div class="det-obs-box" id="det-obs"></div>
+      </div>
+
+    </div><!-- /modal-body -->
+
+    <div class="modal-footer">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:.65rem;color:var(--ink-light);letter-spacing:1px;text-transform:uppercase;">
+          Alterar status:
+        </label>
+        <!-- id="det-select" preservado -->
+        <select id="det-select">
+          <option value="PENDENTE">Pendente</option>
+          <option value="CONFIRMADO">Confirmado</option>
+          <option value="CANCELADO">Cancelado</option>
+          <option value="CONCLUIDO">Concluído</option>
+        </select>
+        <button class="btn-mf-salvar" onclick="salvarStatusModal()">
+          <i class="fas fa-save"></i> Salvar
+        </button>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-mf-fechar"  onclick="fecharModal()">Fechar</button>
+        <button class="btn-mf-excluir" onclick="excluirDoModal()">
+          <i class="fas fa-trash"></i> Excluir
+        </button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
+<!-- ==================== JAVASCRIPT (100% original preservado) ==================== -->
 <script>
     // =====================================================
     // API URL — detecta IP automaticamente
@@ -315,7 +739,6 @@
         return '<span class="badge ' + (map[status] || 'badge-pendente') + '">' + (status || 'PENDENTE') + '</span>';
     }
 
-    // Wrapper fetch que garante JSON ou joga erro legível
     function apiFetch(url, opts) {
         return fetch(url, opts)
             .then(function(r) {
@@ -385,19 +808,19 @@
         .then(function(lista) {
             var tb = document.getElementById('tbTatuadores');
             if (!lista.length) {
-                tb.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#555;">Nenhum tatuador cadastrado.</td></tr>';
+                tb.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--ink-light);padding:32px;">Nenhum tatuador cadastrado.</td></tr>';
                 return;
             }
             tb.innerHTML = lista.map(function(t) {
                 return '<tr>' +
                     '<td>' + t.id + '</td>' +
-                    '<td>' + (t.nome || '-') + '</td>' +
-                    '<td>' + (t.email || '-') + '</td>' +
-                    '<td>' + (t.telefone || '-') + '</td>' +
-                    '<td>' + (t.instagram || '-') + '</td>' +
-                    '<td>' + (t.especialidade || '-') + '</td>' +
+                    '<td>' + (t.nome || '—') + '</td>' +
+                    '<td>' + (t.email || '—') + '</td>' +
+                    '<td>' + (t.telefone || '—') + '</td>' +
+                    '<td>' + (t.instagram || '—') + '</td>' +
+                    '<td>' + (t.especialidade || '—') + '</td>' +
                     '<td>' + (t.contadorSolicitacoes || 0) + '</td>' +
-                    '<td>' + (t.dataCadastro || '-') + '</td>' +
+                    '<td>' + (t.dataCadastro || '—') + '</td>' +
                     '<td>' + (t.ativo ? '✅ Ativo' : '❌ Inativo') + '</td>' +
                 '</tr>';
             }).join('');
@@ -408,7 +831,7 @@
     // =====================================================
     // SOLICITAÇÕES
     // =====================================================
-    var _sols = []; // cache para o modal
+    var _sols = [];
 
     function carregarSolicitacoes() {
         apiFetch(API_URL + '/admin/solicitacoes')
@@ -416,20 +839,20 @@
             _sols = lista;
             var tb = document.getElementById('tbSolicitacoes');
             if (!lista.length) {
-                tb.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#555;">Nenhuma solicitação.</td></tr>';
+                tb.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--ink-light);padding:32px;">Nenhuma solicitação.</td></tr>';
                 return;
             }
             tb.innerHTML = lista.map(function(s) {
                 return '<tr>' +
                     '<td>' + s.id + '</td>' +
-                    '<td>' + (s.tatuadorNome || '-') + '</td>' +
-                    '<td>' + (s.dataSolicitacao || '-') + '</td>' +
-                    '<td>' + (s.horarioInicio || '-') + ' – ' + (s.horarioFim || '-') + '</td>' +
-                    '<td>' + (s.periodoEscolhido || '-') + '</td>' +
+                    '<td>' + (s.tatuadorNome || '—') + '</td>' +
+                    '<td>' + (s.dataSolicitacao || '—') + '</td>' +
+                    '<td>' + (s.horarioInicio || '—') + ' – ' + (s.horarioFim || '—') + '</td>' +
+                    '<td>' + (s.periodoEscolhido || '—') + '</td>' +
                     '<td>R$ ' + (s.valor || 0).toFixed(2) + '</td>' +
                     '<td>' + badge(s.status) + '</td>' +
                     '<td style="white-space:nowrap;">' +
-                        '<button class="btn btn-analisar" style="margin-right:5px;" onclick="abrirModal(' + s.id + ')"><i class="fas fa-search"></i> Detalhes</button>' +
+                        '<button class="btn btn-analisar" style="margin-right:6px;" onclick="abrirModal(' + s.id + ')"><i class="fas fa-search"></i> Detalhes</button>' +
                         '<button class="btn btn-danger" onclick="deletarDireto(' + s.id + ')"><i class="fas fa-trash"></i> Excluir</button>' +
                     '</td>' +
                 '</tr>';
@@ -458,17 +881,17 @@
         if (!s) return;
         _idModal = id;
 
-        document.getElementById('det-id').textContent = '#' + s.id;
-        document.getElementById('det-nome').textContent = s.tatuadorNome || '—';
+        document.getElementById('det-id').textContent     = '#' + s.id;
+        document.getElementById('det-nome').textContent   = s.tatuadorNome || '—';
         document.getElementById('det-criado').textContent = s.criadoEm || '—';
-        document.getElementById('det-data').textContent = s.dataSolicitacao || '—';
+        document.getElementById('det-data').textContent   = s.dataSolicitacao || '—';
         document.getElementById('det-inicio').textContent = s.horarioInicio || '—';
-        document.getElementById('det-fim').textContent = s.horarioFim || '—';
-        document.getElementById('det-periodo').textContent = s.periodoEscolhido || '—';
-        document.getElementById('det-valor').textContent = 'R$ ' + (s.valor || 0).toFixed(2);
-        document.getElementById('det-badge').innerHTML = badge(s.status);
-        document.getElementById('det-obs').textContent = s.observacao || 'Nenhuma observação informada.';
-        document.getElementById('det-select').value = s.status || 'PENDENTE';
+        document.getElementById('det-fim').textContent    = s.horarioFim || '—';
+        document.getElementById('det-periodo').textContent= s.periodoEscolhido || '—';
+        document.getElementById('det-valor').textContent  = 'R$ ' + (s.valor || 0).toFixed(2);
+        document.getElementById('det-badge').innerHTML    = badge(s.status);
+        document.getElementById('det-obs').textContent    = s.observacao || 'Nenhuma observação informada.';
+        document.getElementById('det-select').value       = s.status || 'PENDENTE';
 
         document.getElementById('modalDet').classList.add('ativo');
         document.body.style.overflow = 'hidden';
@@ -480,7 +903,6 @@
         _idModal = null;
     }
 
-    // Fechar ao clicar fora
     document.getElementById('modalDet').addEventListener('click', function(e) {
         if (e.target === this) fecharModal();
     });
@@ -496,7 +918,6 @@
         .then(function(r) {
             if (r.success) {
                 mostrarAviso('Status atualizado para ' + status + '!', 'ok');
-                // Atualiza cache e badge dentro do modal
                 var s = _sols.find(function(x){ return x.id === _idModal; });
                 if (s) s.status = status;
                 document.getElementById('det-badge').innerHTML = badge(status);
@@ -535,15 +956,16 @@
             var h = config.horarios || [];
             document.getElementById('listaHorarios').innerHTML = h.length
                 ? h.map(function(v) { return tag_config(v, 'removerHorario'); }).join('')
-                : '<p style="color:#555; font-size:0.85rem;">Nenhum horário cadastrado.</p>';
+                : '<p style="color:var(--ink-light);font-size:.8rem;">Nenhum horário cadastrado.</p>';
 
             var d = config.diasFechados || [];
             document.getElementById('listaDias').innerHTML = d.length
                 ? d.map(function(v) { return tag_config(v, 'removerDia'); }).join('')
-                : '<p style="color:#555; font-size:0.85rem;">Nenhum dia fechado.</p>';
+                : '<p style="color:var(--ink-light);font-size:.8rem;">Nenhum dia fechado.</p>';
         })
         .catch(function(e) {
-            document.getElementById('listaHorarios').innerHTML = '<p style="color:#ff8888;">Erro ao carregar configurações. Verifique o servidor.</p>';
+            document.getElementById('listaHorarios').innerHTML =
+                '<p style="color:#c05050;font-size:.8rem;">Erro ao carregar configurações. Verifique o servidor.</p>';
         });
     }
 
@@ -622,7 +1044,8 @@
             }).join('');
         })
         .catch(function(e) {
-            document.getElementById('listaPrecos').innerHTML = '<p style="color:#ff8888;">Erro ao carregar preços.</p>';
+            document.getElementById('listaPrecos').innerHTML =
+                '<p style="color:#c05050;font-size:.8rem;">Erro ao carregar preços.</p>';
         });
     }
 
@@ -648,9 +1071,8 @@
     verificarLogin();
     carregarDashboard();
 
-    // Auto-refresh a cada 30s
     setInterval(function() {
-        if (document.getElementById('sec-dashboard').style.display !== 'none') carregarDashboard();
+        if (document.getElementById('sec-dashboard').style.display    !== 'none') carregarDashboard();
         if (document.getElementById('sec-solicitacoes').style.display !== 'none') carregarSolicitacoes();
     }, 30000);
 </script>
